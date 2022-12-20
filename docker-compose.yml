@@ -5,8 +5,14 @@ services:
       hostname: graphite
       ports:
         - "8080:80"
+        - "2003:2003"
       volumes:
         - "./graphite/conf:/opt/graphite/conf"
-        - "~/graphite-storage:/opt/graphite/storage"
-      restart: always
+        - "./data:/opt/graphite/storage"
+      restart: unless-stopped
+    write-graphite:
+      build: ./write-graphite
+      restart: unless-stopped
+      depends_on:
+        - graphite
 
