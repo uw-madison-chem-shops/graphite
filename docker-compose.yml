@@ -4,8 +4,7 @@ services:
       image: graphiteapp/graphite-statsd
       hostname: graphite
       ports:
-        - "8080:80"
-        - "2003:2003"
+        - "80:80"
       volumes:
         - "./graphite/conf:/opt/graphite/conf"
         - "./data:/opt/graphite/storage"
