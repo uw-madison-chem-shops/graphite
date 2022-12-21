@@ -10,6 +10,8 @@ services:
         - "./graphite/conf:/opt/graphite/conf"
         - "./data:/opt/graphite/storage"
       restart: unless-stopped
+      environment:
+        - GRAPHITE_TIME_ZONE=America/Chicago
     write-graphite:
       build: ./write-graphite
       restart: unless-stopped
