@@ -1,19 +1,35 @@
 version: "3"
 services:
-    graphite:
-      image: graphiteapp/graphite-statsd
-      hostname: graphite
-      ports:
-        - "80:80"
-      volumes:
-        - "./graphite/conf:/opt/graphite/conf"
-        - "./data:/opt/graphite/storage"
-      restart: unless-stopped
-      environment:
-        - GRAPHITE_TIME_ZONE=America/Chicago
-    write-graphite:
-      build: ./write-graphite
-      restart: unless-stopped
-      depends_on:
-        - graphite
-
+  graphite:
+    image: graphiteapp/graphite-statsd
+    hostname: graphite
+    volumes:
+      - "./graphite/conf:/opt/graphite/conf"
+      - "./data:/opt/graphite/storage"
+    restart: unless-stopped
+    environment:
+      - GRAPHITE_TIME_ZONE=America/Chicago
+  write-graphite:
+    build: ./write-graphite
+    restart: unless-stopped
+    depends_on:
+      - graphite
+  swag:
+    image: lscr.io/linuxserver/swag
+    container_name: swag
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Chicago
+      - URL=graphite.chem.wisc.edu
+      - VALIDATION=http
+    volumes:
+      - "./swag:/config" 
+    ports:
+      - 80:80
+      - 443:443
+    restart: unless-stopped
+    depends_on:
+      - graphite
